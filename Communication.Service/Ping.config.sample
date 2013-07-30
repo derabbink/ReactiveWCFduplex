@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <system.serviceModel>
+    <services>
+      <service name="Communication.Service.Ping.PingService" behaviorConfiguration="PingBehavior">
+        <host>
+          <baseAddresses>
+            <add baseAddress="http://localhost:8000/ping"/>
+            <!-- run cmd as admin for permissions `netsh http add urlacl url=http://+:8000/ping user=yourlocaluser` -->
+          </baseAddresses>
+        </host>
+        <!-- endpoint is exposed at address http://localhost:8000/ping -->
+        <endpoint address="" binding="wsDualHttpBinding" contract="Communication.Contracts.Service.IPing"/>
+      </service>
+    </services>
+
+    <behaviors>
+      <serviceBehaviors>
+        <behavior name="PingBehavior">
+          <serviceMetadata httpGetEnabled="True"/>
+          <serviceDebug includeExceptionDetailInFaults="True"/>
+        </behavior>
+      </serviceBehaviors>
+    </behaviors>
+  </system.serviceModel>
+</configuration>
