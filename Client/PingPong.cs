@@ -60,5 +60,35 @@ namespace Client
                 });
             return finalObs.Last();
         }
+
+        /// <summary>
+        /// same as Do(), but converts callback into exception
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public string DoError(string message)
+        {
+            Guid operationId = Guid.NewGuid();
+            IObservable<string> errorObs = _pongs
+                .Where(eArgs => eArgs.OperationId == operationId)
+                .Select<PongEventArgs, string>(_ => { throw new Exception("Error"); });
+
+            IObservable<string> finalObs = Observable.Create((IObserver<string> observer) =>
+            {
+                var resultOrErrorObs = errorObs.Amb(Observable.Never<string>());
+                var replay = resultOrErrorObs.Replay(Scheduler.Default);
+                replay.Connect();
+
+                var msg = new Ping() { OperationId = operationId, Message = message };
+                Channel.Ping(msg);
+
+                //no deadlock here, since replay is running on the default threadpool
+                var result = replay.First();
+                observer.OnNext(result);
+                observer.OnCompleted();
+                return Disposable.Empty;
+            });
+            return finalObs.Last();
+        }
     }
 }

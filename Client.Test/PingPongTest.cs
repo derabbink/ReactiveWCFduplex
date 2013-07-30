@@ -37,6 +37,15 @@ namespace Client.Test
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        [Test]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Error")]
+        public void DoErrorCompletes()
+        {
+            string argument = "hello";
+            //this should complete quite quickly
+            string actual = _pingPong.DoError(argument);
+        }
+
         #region teardown
         [TestFixtureTearDown]
         public void TeardownFixture()

@@ -10,4 +10,4 @@ That way the `Pong` `ServiceHost` is not blocked any more, and the entire method
 ## How to run
  * Open the solution (in VS2010 SP1) and build all projects.
  * Either run an instance of the `Host` project, followed by running an instance of the `Client` project,...
- * ...or run all NUnit tests (there is just one) in `Client.Test`.
+ * ...or run all NUnit tests in `Client.Test`.
